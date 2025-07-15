@@ -102,6 +102,7 @@ class NeuralNet:
 
         all_models_loss_history = []
         model_labels = []
+        results_summary = []
         colors = plt.cm.jet(np.linspace(0, 1, len(activations) * len(learning_rates) * len(max_iterations) * len(num_hidden_layers)))
         color_idx = 0
 
@@ -146,6 +147,18 @@ class NeuralNet:
                 print(f"Test F1-score (weighted): {test_f1:.4f}")
                 print(f"Actual iterations: {nn_model.n_iter_}")
 
+                results_summary.append({
+                    "Activation": activation,
+                    "Learning Rate": lr,
+                    "Max Iterations": max_iteration,
+                    "Hidden Layers": hl_num,
+                    "Train Accuracy": f"{train_accuracy:.4f}",
+                    "Test Accuracy": f"{test_accuracy:.4f}",
+                    "Train F1": f"{train_f1:.4f}",
+                    "Test F1": f"{test_f1:.4f}",
+                    "Final Loss": f"{nn_model.loss_:.4f}" if hasattr(nn_model, 'loss_') else "N/A"
+                })
+
                 # Store loss history for plotting
                 if nn_model.loss_curve_ is not None:
                     all_models_loss_history.append(nn_model.loss_curve_)
@@ -168,6 +181,14 @@ class NeuralNet:
                 color_idx += 1
             except Exception as e:
                 print("An error occurred!, error:", e)
+
+        # Display the summary table
+        summary_df = pd.DataFrame(results_summary)
+        summary_df.to_csv('hyperparameter_tuning_summary.csv', index=False)
+        print("\n\n--- Hyperparameter Tuning Summary ---")
+        print("Hyperparameter tuning summary saved to hyperparameter_tuning_summary.csv")
+        print(summary_df.to_string())
+
 
         # Plot the model history (loss curve) for all models in a single plot
         plt.figure(figsize=(14, 8))
