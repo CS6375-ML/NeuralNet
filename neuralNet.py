@@ -136,6 +136,7 @@ class NeuralNet:
                 y_train_pred = nn_model.predict(X_train_scaled)
                 train_accuracy = accuracy_score(y_train, y_train_pred)
                 train_f1 = f1_score(y_train, y_train_pred, average='weighted')
+                print(f"\nLabel: {label}")
                 print(f"Training Accuracy: {train_accuracy:.4f}")
                 print(f"Training F1-score (weighted): {train_f1:.4f}")
 
